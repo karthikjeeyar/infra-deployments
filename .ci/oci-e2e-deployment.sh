@@ -64,7 +64,7 @@ function installCITools() {
 # Secrets used by pipelines to push component containers to quay.io
 function createQuayPullSecrets() {
     echo "$QUAY_TOKEN" | base64 --decode > docker.config
-    oc create namespace $E2E_APPLICATIONS_NAMESPACE --dry-run=client -o yaml | oc apply -f -
+    oc create namespace $E2E_APPLICATIONS_NAMESPACE --dry-run=true -o yaml | oc apply -f -
     kubectl create secret docker-registry redhat-appstudio-registry-pull-secret -n  $E2E_APPLICATIONS_NAMESPACE --from-file=.dockerconfigjson=docker.config
     kubectl create secret docker-registry redhat-appstudio-staginguser-pull-secret -n  $E2E_APPLICATIONS_NAMESPACE --from-file=.dockerconfigjson=docker.config
     rm docker.config

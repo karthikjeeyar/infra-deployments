@@ -12,4 +12,4 @@
 #
 set -euo pipefail
 cosign public-key --key k8s://tekton-chains/signing-secrets > cosign.pub
-oc create secret generic cosign-public-key --from-file=cosign.pub --dry-run=client -o yaml | oc apply -f-
+oc create secret generic cosign-public-key --from-file=cosign.pub --dry-run=true -o yaml | oc apply -f-

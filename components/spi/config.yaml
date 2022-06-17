@@ -1,6 +1,6 @@
-sharedSecret: <shared-secret>
+sharedSecret: test
 serviceProviders:
-- type: GitHub
-  clientId: <github-client-id>
-  clientSecret: <github-client-secret>
-baseUrl: https://spi-oauth-route-spi-system.apps.<cluster-url>
+  - type: GitHub
+    clientId: 211512
+    clientSecret: 48f60cb4624b35d5bb7e74e58a8cb95d6dc0e52b
+baseUrl: https://spi-oauth-route-spi-system.apps.ci-ln-q4jl5it-72292.origin-ci-int-gce.dev.rhcloud.com
