@@ -66,7 +66,7 @@ if [ -n "$SHARED_SECRET" ] && [ -n "$SPI_TYPE" ] && [ -n "$SPI_CLIENT_ID" ] && [
         yq e ".serviceProviders[0].clientId=\"$SPI_CLIENT_ID\"" - | \
         yq e ".serviceProviders[0].clientSecret=\"$SPI_CLIENT_SECRET\"" - | \
         yq e ".baseUrl=\"$ROUTE\"" - > $TMP_FILE
-    oc create -n spi-system secret generic oauth-config --from-file=config.yaml=$TMP_FILE --dry-run=client -o yaml | oc apply -f -
+    oc create -n spi-system secret generic oauth-config --from-file=config.yaml=$TMP_FILE --dry-run=true -o yaml | oc apply -f -
     echo "SPI configurared, set Authorization callback URL to $ROUTE"
     rm $TMP_FILE
 fi
@@ -78,7 +78,7 @@ if [ -n "$DOCKER_IO_AUTH" ]; then
     oc registry login --registry=docker.io --auth-basic=$DOCKER_IO_AUTH --to=$AUTH
     oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=$AUTH
     # Set current namespace pipeline serviceaccount which is used by buildah
-    oc create secret docker-registry docker-io-pull --from-file=.dockerconfigjson=$AUTH -o yaml --dry-run=client | oc apply -f-
+    oc create secret docker-registry docker-io-pull --from-file=.dockerconfigjson=$AUTH -o yaml --dry-run=true | oc apply -f-
     oc secrets link pipeline docker-io-pull
     rm $AUTH
 fi
