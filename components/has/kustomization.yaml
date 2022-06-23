@@ -10,8 +10,8 @@ kind: Kustomization
 
 images:
 - name: quay.io/redhat-appstudio/application-service
-  newName: quay.io/redhat-appstudio/application-service
-  newTag: eaa711b13be75b379155ff26ab43035832105319
+  newName: quay.io/redhat-appstudio/pull-request-builds
+  newTag: has-c9acb6b1b75d7a34782891b1b088a195bb6c5786
 
 configMapGenerator:
 - literals:

@@ -110,6 +110,11 @@ git checkout $MY_GIT_BRANCH
 #set the local cluster to point to the current git repo and branch and update the path to development
 $ROOT/hack/util-update-app-of-apps.sh $MY_GIT_REPO_URL development $PREVIEW_BRANCH
 
+# update Pipelines as code secrets and github app
+if [ -n "${GITHUB_APP_ID}" ] && [ -n "${GITHUB_APP_PRIVATE_KEY}" ]; then
+  $ROOT/hack/build/setup-pac-app.sh
+fi
+
 # trigger refresh of apps
 for APP in $(kubectl get apps -n openshift-gitops -o name); do
   kubectl patch $APP -n openshift-gitops --type merge -p='{"metadata": {"annotations":{"argocd.argoproj.io/refresh": "hard"}}}'
