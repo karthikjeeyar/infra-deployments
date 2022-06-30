@@ -1,5 +1,0 @@
-K8SURL=https://console-openshift-console.apps.karthikhacbs.lab.pnq2.cee.redhat.com
-TOKEN=sha256~RAePLe-0jFaENb4fkfx3agQ1A4ZCnOAvkTaWg2GGCSY
-KEYCLOAK_URL=https://keycloak-keycloak.apps.karthikhacbs.lab.pnq2.cee.redhat.com/realms/myrealm/
-HOSTNAME=karthikhacbs.lab.pnq2.cee.redhat.com
-PROXYSSL=false
