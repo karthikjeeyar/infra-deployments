@@ -1163,7 +1163,7 @@
           - --leader-elect
           command:
           - /manager
-          image: quay.io/cloudservices/frontend-operator:latest
+          image: quay.io/cloudservices/frontend-operator:efc5369
           livenessProbe:
             httpGet:
               path: /healthz
