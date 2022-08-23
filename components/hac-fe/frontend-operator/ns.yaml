@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    control-plane: controller-manager 
+    argocd.argoproj.io/managed-by: openshift-gitops
+  name: frontend-operator-system
