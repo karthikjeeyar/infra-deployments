@@ -1171,7 +1171,7 @@ objects:
         serviceAccountName: frontend-operator-controller-manager
         terminationGracePeriodSeconds: 10
 parameters:
-- name: IMAGE_TAG
-  required: true
+- name: IMAGE_TAG 
+  value: latest
 - name: IMAGE
   value: quay.io/cloudservices/frontend-operator
