@@ -2,6 +2,7 @@ resources:
 - allow-argocd-to-manage.yaml
 - hac-core/
 - hac-dev/  
+- hac-infra/  
 
 generatorOptions:
   disableNameSuffixHash: true

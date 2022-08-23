@@ -1,0 +1,16 @@
+apiVersion: cloud.redhat.com/v1alpha1
+kind: Frontend
+metadata:
+  name: hac-infra
+spec:
+  API:
+    versions:
+      - v1
+  assetsPrefix: api/plugins
+  deploymentRepo: 'http://github.com/openshift/hac-infra'
+  envName: ephem-hac
+  frontend:
+    paths:
+      - /api/plugins/hac-infra
+  image: quay.io/cloudservices/hac-infra-frontend:338201f
+  title: hac-infra
