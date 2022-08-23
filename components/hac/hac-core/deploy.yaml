@@ -11,7 +11,7 @@ spec:
   frontend:
     paths:
       - /apps/hac-core
-  image: quay.io/cloudservices/hac-core-frontend:latest
+  image: quay.io/cloudservices/hac-core-frontend:03574ab
   module:
     manifestLocation: /apps/hac-core/fed-mods.json
     moduleID: hacCore
