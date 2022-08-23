@@ -1,5 +1,4 @@
-resources:
-- ns.yaml 
+resources: 
 - allow-argocd-frontend-operator.yaml 
 - frontend-operator/  
 
