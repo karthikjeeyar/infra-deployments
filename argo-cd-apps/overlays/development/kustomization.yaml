@@ -1,5 +1,6 @@
 resources:
 - ../../base
+- frontend-operator.yaml
 - hac.yaml
 
 namespace: openshift-gitops
