@@ -1,0 +1,27 @@
+apiVersion: cloud.redhat.com/v1alpha1
+kind: Frontend
+metadata:
+  name: inventory
+spec:
+  envName: env-boot
+  title: Inventory
+  deploymentRepo: https://github.com/RedHatInsights/insights-inventory-frontend
+  API:
+    versions:
+    - v1
+  frontend:
+    paths:
+    - /apps/inventory
+  image: quay.io/cloudservices/insights-inventory-frontend:27803c7
+  navItems:
+    - appId: "inventory"
+      title: "Inventory"
+      href: "/insights/inventory"
+      product: "Red Hat Insights"
+  module:
+    manifestLocation: "/apps/inventory/fed-mods.json"
+    modules:
+    - id: "inventory"
+      module: "./RootApp"
+      routes:
+      - pathname: /insights/inventory

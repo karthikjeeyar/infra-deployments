@@ -1,0 +1,6 @@
+apiVersion: cloud.redhat.com/v1alpha1
+kind: FrontendEnvironment
+metadata:
+  name: env-boot
+spec:
+  sso: https://env-boot-auth/auth/

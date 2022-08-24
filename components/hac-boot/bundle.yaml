@@ -1,0 +1,11 @@
+apiVersion: cloud.redhat.com/v1alpha1
+kind: Bundle
+metadata:
+  name: insights-navigation
+spec:
+  id: insights-navigation
+  title: RHEL
+  appList:
+    - inventory
+    - hac-core
+  envName: env-boot
