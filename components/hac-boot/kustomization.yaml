@@ -4,7 +4,7 @@ resources:
 - bundle.yaml
 - chrome.yml 
 - chrome-route.yml 
-- environment-route.yml  
+- inventory-route.yml  
 
 generatorOptions:
   disableNameSuffixHash: true
