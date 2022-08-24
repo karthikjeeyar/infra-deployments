@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    path: components/hac-fe
+    path: components/hac-fe-config/default
     repoURL: https://github.com/redhat-appstudio/infra-deployments.git
 
   destination:
