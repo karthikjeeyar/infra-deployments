@@ -1,26 +1,19 @@
-# Adds namespace to all resources.
-namespace: frontend-operator-system
+resources:
+- environment.yaml
+- inventory.yml
+- bundle.yaml
+- chrome.yml 
+- chrome-route.yml 
+- environment-route.yml  
 
-# Value of this field is prepended to the
-# names of all resources, e.g. a deployment named
-# "wordpress" becomes "alices-wordpress".
-# Note that it should also match with the prefix (text before '-') of the namespace
-# field above.
-namePrefix: frontend-operator-
+generatorOptions:
+  disableNameSuffixHash: true
 
-# Labels to add to all resources and selectors.
-#commonLabels:
-#  someName: someValue
+# Skip applying the Tekton operands while the Tekton operator is being installed.
+# See more information about this option, here:
+# https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#skip-dry-run-for-new-custom-resources-types
+commonAnnotations:
+  argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 
-bases:
-- ../crd
-- ../rbac
-- ../manager
-# [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix including the one in
-# crd/kustomization.yaml
-#- ../webhook
-
-patchesStrategicMerge:
-- manager.yaml # Put template param refs into image field
-
-vars: []
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
