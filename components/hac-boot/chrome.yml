@@ -1,0 +1,17 @@
+apiVersion: cloud.redhat.com/v1alpha1
+kind: Frontend
+metadata:
+  name: chrome
+spec:
+  # Add fields here
+  envName: env-boot
+  title: Chrome
+  deploymentRepo: https://github.com/RedHatInsights/insights-chrome/
+  API:
+    versions:
+      - v1
+  frontend:
+    paths:
+      - /
+      - /config/chrome
+  image: quay.io/cloudservices/insights-chrome-frontend:1ddc0de

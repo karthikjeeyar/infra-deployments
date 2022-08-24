@@ -2,6 +2,7 @@ resources:
 - ../../base
 - frontend-operator.yaml
 - hac.yaml
+- hac-boot.yaml
 
 namespace: openshift-gitops
 apiVersion: kustomize.config.k8s.io/v1beta1
