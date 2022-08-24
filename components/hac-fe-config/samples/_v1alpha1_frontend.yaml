@@ -1,0 +1,16 @@
+apiVersion: cloud.redhat.com/v1alpha1
+kind: Frontend
+metadata:
+  name: test
+spec:
+  # Add fields here
+  envName: test
+  title: test
+  deploymentRepo: http://test
+  API:
+    versions:
+    - v1
+  frontend:
+    paths:
+    - test
+  image: quay.io/psav/clowder-hello:latest

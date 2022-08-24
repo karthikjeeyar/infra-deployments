@@ -1,0 +1,22 @@
+# permissions for end users to view frontends.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: frontendenvironment-viewer-role
+  labels: 
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+rules:
+- apiGroups:
+  - cloud.redhat.com
+  resources:
+  - frontendenvironments
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - cloud.redhat.com
+  resources:
+  - frontendenvironments/status
+  verbs:
+  - get
