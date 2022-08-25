@@ -1,6 +1,7 @@
 resources:
 - environment.yaml 
 - bundle.yaml
+- inventory.yml
 - hac_nav.yaml
 - hac-dev.yaml
 - hac.yaml
