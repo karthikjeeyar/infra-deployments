@@ -1,5 +1,5 @@
 resources:
-- deploy.yaml 
+- deploy.yml 
 
 generatorOptions:
   disableNameSuffixHash: true
