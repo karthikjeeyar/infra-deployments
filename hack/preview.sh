@@ -75,6 +75,20 @@ if [ -n "$DOCKER_IO_AUTH" ]; then
     rm $AUTH
 fi
 
+if [ -n "$QUAY_IO_KUBESECRET" ]; then
+    TMP_QUAY=$(mktemp)
+    cp $QUAY_IO_KUBESECRET $TMP_QUAY
+    yq e -i '.metadata.name = "quay-cloudservices-pull"' $TMP_QUAY
+    if ! kubectl get namespace boot &>/dev/null; then
+      kubectl create namespace boot
+    fi
+    if kubectl get secret quay-cloudservices-pull --namespace=boot &>/dev/null; then
+      kubectl delete secret quay-cloudservices-pull --namespace=boot
+    fi 
+    kubectl create -f $TMP_QUAY --namespace=boot
+    rm $TMP_QUAY
+fi
+
 rekor_server="rekor.$domain"
 sed -i "s/rekor-server.enterprise-contract-service.svc/$rekor_server/" $ROOT/argo-cd-apps/base/enterprise-contract.yaml
 yq -i e ".data |= .\"transparency.url\"=\"https://$rekor_server\"" $ROOT/components/build/tekton-chains/chains-config.yaml
@@ -159,7 +173,7 @@ while :; do
   echo "$NOT_DONE"
   if [ -z "$NOT_DONE" ]; then
      echo All Applications are synced and Healthy
-     exit 0
+     break
   else
      UNKNOWN=$(echo "$NOT_DONE" | grep Unknown | grep -v Progressing | cut -f1 -d ' ')
      if [ -n "$UNKNOWN" ]; then
@@ -186,4 +200,15 @@ while :; do
      echo Waiting $INTERVAL seconds for application sync
      sleep $INTERVAL
   fi
+done
+
+# Wait for all tekton components to be installed
+# The status of a tektonconfig CR should be "type: Ready, status: True" once the install is completed
+# More info: https://tekton.dev/docs/operator/tektonconfig/#tekton-config
+while :; do
+  STATE=$(oc get tektonconfig config -o json | jq -r '.status.conditions[] | select(.type == "Ready")')
+  [ "$(jq -r '.status' <<< "$STATE")" == "True" ] && echo All required tekton resources are installed and ready && break
+  echo Some tekton resources are not ready yet:
+  jq -r '.message' <<< "$STATE"
+  sleep $INTERVAL
 done
