@@ -5,5 +5,4 @@ metadata:
 spec:
   sso: 'https://env-boot-7a3e7yxk-auth.apps-crc.testing/auth/'
   ingressClass: openshift-default
-  hostname: env-boot-127-0-0-1.nip.io
    
