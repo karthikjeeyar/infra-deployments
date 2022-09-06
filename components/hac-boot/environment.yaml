@@ -4,4 +4,5 @@ metadata:
   name: env-boot 
 spec:
   sso: 'https://env-boot-7a3e7yxk-auth.apps-crc.testing/auth/'
+  ingressClass: openshift-default 
    
