@@ -5,5 +5,5 @@ metadata:
 spec:
   sso: 'https://env-boot-7a3e7yxk-auth.apps-crc.testing/auth/'
   ingressClass: openshift-default
-  hostname: apps-crc.testing 
+  hostname: localhost
    
