@@ -3,7 +3,7 @@ kind: FrontendEnvironment
 metadata:
   name: env-boot 
 spec:
-  sso: 'https://env-boot-7a3e7yxk-auth.apps-crc.testing/auth/'
+  sso: 'https://env-boot-5h8d1n5p-auth.apps-crc.testing/auth/'
   ingressClass: openshift-default
   hostname: env-boot-local-127-0-0-1.nip.io
    
