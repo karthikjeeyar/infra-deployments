@@ -4,8 +4,7 @@ resources:
 - hac_nav.yaml
 - hac-dev.yaml
 - hac.yaml
-- chrome.yml 
-- chrome-route.yml  
+- chrome.yml  
 - env-boot.yaml  
 
 generatorOptions:
