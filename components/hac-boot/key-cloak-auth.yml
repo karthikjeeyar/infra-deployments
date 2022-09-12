@@ -1,3 +1,6 @@
+# add a route with fixed name so you can hardcode it in the environment
+# note, this may be an issue in the reachability for public servers with access to keycloak 
+# and the jdoe account
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:

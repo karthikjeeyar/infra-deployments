@@ -5,7 +5,8 @@ resources:
 - hac-dev.yaml
 - hac.yaml
 - chrome.yml  
-- env-boot.yaml  
+- env-boot.yaml
+- key-cloak-auth.yml  
 
 generatorOptions:
   disableNameSuffixHash: true
