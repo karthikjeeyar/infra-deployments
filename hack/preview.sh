@@ -3,7 +3,8 @@
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/..
 
 if [ -f $ROOT/hack/preview.env ]; then
-    source $ROOT/hack/preview.env
+    source $ROOT/hack/preview.env 
+    bash $ROOT/hack/util-validate-preview-env.sh 
 fi
 
 if [ -z "$MY_GIT_FORK_REMOTE" ]; then
