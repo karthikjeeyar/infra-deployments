@@ -1,9 +1,10 @@
+# note, the sso is a hardcoded route to enable easy access but is "guessable"
 apiVersion: cloud.redhat.com/v1alpha1
 kind: FrontendEnvironment
 metadata:
   name: env-boot 
 spec:
-  sso: 'https://env-boot-0cl7kcy4-auth.apps-crc.testing/auth/'
+  sso: 'https://keycloak-auth-boot.apps-crc.testing/auth/auth/'
   ingressClass: openshift-default
   hostname: env-boot-local-127-0-0-1.nip.io
    
