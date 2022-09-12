@@ -4,7 +4,7 @@ kind: FrontendEnvironment
 metadata:
   name: env-boot 
 spec:
-  sso: 'https://keycloak-auth-boot.apps-crc.testing/auth/auth/'
+  sso: 'https://keycloak-auth-boot.apps-crc.testing/auth/'
   ingressClass: openshift-default
   hostname: env-boot-local-127-0-0-1.nip.io
    
