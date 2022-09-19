@@ -1,7 +1,7 @@
 resources:
 - ../../base
-- clowder.yaml
-- frontend-operator.yaml
+- clowder-system.yaml
+- hac-fe.yaml
 - hac.yaml
 - hac-boot.yaml
 
