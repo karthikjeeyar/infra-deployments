@@ -45,12 +45,13 @@ yq -i e ".0.value=\"$SPI_API_SERVER\"" $ROOT/components/spi/oauth-service-config
 # to serve requests using a trusted TLS certificate.
 $ROOT/hack/util-patch-spi-config.sh
 # configure the secrets and providers in SPI
+CONFIG_ROOT="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
 TMP_FILE=$(mktemp)
-yq e ".sharedSecret=\"${SHARED_SECRET:-$(openssl rand -hex 20)}\"" $ROOT/../components/spi/config.yaml | \
+yq e ".sharedSecret=\"${SHARED_SECRET:-$(openssl rand -hex 20)}\"" $CONFIG_ROOT/components/spi/config.yaml | \
     yq e ".serviceProviders[0].type=\"${SPI_TYPE:-GitHub}\"" - | \
     yq e ".serviceProviders[0].clientId=\"${SPI_CLIENT_ID:-app-client-id}\"" - | \
     yq e ".serviceProviders[0].clientSecret=\"${SPI_CLIENT_SECRET:-app-secret}\"" - > $TMP_FILE
-oc create -n spi-system secret generic shared-configuration-file --from-file=config.yaml=$TMP_FIL -o yaml | oc apply -f -
+oc create -n spi-system secret generic shared-configuration-file --from-file=$TMP_FILE -o yaml | oc apply -f -
 echo "SPI configured"
 rm $TMP_FILE
 
