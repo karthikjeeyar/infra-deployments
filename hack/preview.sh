@@ -50,7 +50,7 @@ yq e ".sharedSecret=\"${SHARED_SECRET:-$(openssl rand -hex 20)}\"" $ROOT/compone
     yq e ".serviceProviders[0].type=\"${SPI_TYPE:-GitHub}\"" - | \
     yq e ".serviceProviders[0].clientId=\"${SPI_CLIENT_ID:-app-client-id}\"" - | \
     yq e ".serviceProviders[0].clientSecret=\"${SPI_CLIENT_SECRET:-app-secret}\"" - > $TMP_FILE
-oc create -n spi-system secret generic shared-configuration-file --from-file=config.yaml=$TMP_FILE --dry-run=client -o yaml | oc apply -f -
+oc create -n spi-system secret generic shared-configuration-file --from-file=config.yaml=$TMP_FIL -o yaml | oc apply -f -
 echo "SPI configured"
 rm $TMP_FILE
 
@@ -70,7 +70,7 @@ if [ -n "$DOCKER_IO_AUTH" ]; then
     oc registry login --registry=docker.io --auth-basic=$DOCKER_IO_AUTH --to=$AUTH
     oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=$AUTH
     # Set current namespace pipeline serviceaccount which is used by buildah
-    oc create secret docker-registry docker-io-pull --from-file=.dockerconfigjson=$AUTH -o yaml --dry-run=client | oc apply -f-
+    oc create secret docker-registry docker-io-pull --from-file=.dockerconfigjson=$AUTH -o yaml  | oc apply -f-
     oc secrets link pipeline docker-io-pull
     rm $AUTH
 fi
