@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/..
+ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/
 
 if [ -f $ROOT/hack/preview.env ]; then
     source $ROOT/hack/preview.env
