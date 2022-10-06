@@ -2,6 +2,6 @@
   {
     "op": "add",
     "path": "/data/API_SERVER",
-    "value": "https://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com:443"
+    "value": "https://api-toolchain-host-operator.apps.kjeeyar-4.12-06oct22.devcluster.openshift.com:443"
   }
 ]
