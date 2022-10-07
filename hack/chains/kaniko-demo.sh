@@ -4,7 +4,7 @@ source $(dirname $0)/_helpers.sh
 set -ue
 
 title "Suggested config for this demo:"
-$SCRIPTDIR/config.sh default --dry-run
+$SCRIPTDIR/config.sh default 
 
 title "Current config:"
 $SCRIPTDIR/config.sh

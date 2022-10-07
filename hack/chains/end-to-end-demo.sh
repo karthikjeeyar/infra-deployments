@@ -97,7 +97,7 @@ kubectl apply -k "${BUILD_DEFINITIONS_DIR}/hack/test-build"
 kubectl apply -k "${BUILD_DEFINITIONS_DIR}/pipelines/hacbs"
 
 # This is for the build pipeline
-kubectl create secret docker-registry redhat-appstudio-staginguser-pull-secret --from-file=.dockerconfigjson="${HOME}/.docker/config.json" --dry-run=client -o yaml | kubectl apply -f -
+kubectl create secret docker-registry redhat-appstudio-staginguser-pull-secret --from-file=.dockerconfigjson="${HOME}/.docker/config.json" -o yaml | kubectl apply -f -
 
 echo "
 🏃 Running a build pipeline
@@ -128,7 +128,7 @@ echo "
 
 💲 infra-deployments/hack/chains/release-pipeline-with-ec-demo.sh" "${BUILD_OUTPUT_IMAGE_REF}" "${RELEASE_OUTPUT_IMAGE_REF}
 "
-kubectl create secret docker-registry release-demo --from-file=.dockerconfigjson="${HOME}/.docker/config.json" --dry-run=client -o yaml | kubectl apply -f -
+kubectl create secret docker-registry release-demo --from-file=.dockerconfigjson="${HOME}/.docker/config.json" -o yaml | kubectl apply -f -
 oc secrets link pipeline release-demo --for=pull,mount
 
 "${HACK_CHAINS_DIR}/copy-public-sig-key.sh"
