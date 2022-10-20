@@ -17,6 +17,6 @@ fi
 if [ -n "$MY_GITHUB_TOKEN" ]; then
     echo
     echo "Setting gitHub token"
-    oc create namespace application-service --dry-run=client -o yaml | oc apply ${KUBECONFIG_PARAM} -f -
-    oc create -n application-service secret generic has-github-token --from-literal=token="$MY_GITHUB_TOKEN" --dry-run=client -o yaml | oc apply ${KUBECONFIG_PARAM} -f -
+    oc create namespace application-service  -o yaml | oc apply ${KUBECONFIG_PARAM} -f -
+    oc create -n application-service secret generic has-github-token --from-literal=token="$MY_GITHUB_TOKEN"  -o yaml | oc apply ${KUBECONFIG_PARAM} -f -
 fi

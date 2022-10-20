@@ -1,0 +1,5 @@
+serviceProviders:
+  - type: GitHub
+    clientId: 211512
+    clientSecret: a600305a4f032bef0cb6f8784532b886fffe03e6
+baseUrl: https://spi-oauth-route-spi-system.apps.kjeeyar-4.10-a-20oct22.devcluster.openshift.com
