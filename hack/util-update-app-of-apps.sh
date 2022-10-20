@@ -38,7 +38,7 @@ fi
 echo
 
 echo "Setting the application repo to $GITURL, branch $BRANCH in overlay $OVERLAYDIR"
-kubectl create -f $MANIFEST --dry-run=client -o json ${KUBECONFIG_PARAM}  | \
+kubectl create -f $MANIFEST  -o json ${KUBECONFIG_PARAM}  | \
  jq "$PATCHOVERLAY" | \
  jq "$PATCHREPO" | \
  jq "$PATCHBRANCH" | \
