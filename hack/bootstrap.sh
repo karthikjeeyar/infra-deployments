@@ -41,11 +41,11 @@ fi
 
 echo
 echo "Installing the OpenShift GitOps operator subscription:"
-kubectl apply -f $ROOT/openshift-gitops/subscription-openshift-gitops.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
+oc apply -f $ROOT/openshift-gitops/subscription-openshift-gitops.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
 
 echo
 echo -n "Waiting for 'appproject/default' and namespace 'openshift-gitops' to exist: "
-while ! kubectl get appproject/default -n openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG} &> /dev/null ; do
+while ! oc get appproject/default -n openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG} &> /dev/null ; do
   echo -n .
   sleep 1
 done
@@ -53,7 +53,7 @@ echo "OK"
 
 echo
 echo -n "Waiting for OpenShift GitOps Route: "
-while ! kubectl get route/openshift-gitops-server -n openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG} &> /dev/null ; do
+while ! oc get route/openshift-gitops-server -n openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG} &> /dev/null ; do
   echo -n .
   sleep 1
 done
@@ -63,15 +63,15 @@ echo
 echo "Patching OpenShift GitOps ArgoCD CR"
 
 # Switch the Route to use re-encryption
-kubectl patch argocd/openshift-gitops -n openshift-gitops -p '{"spec": {"server": {"route": {"enabled": true, "tls": {"termination": "reencrypt"}}}}}' --type=merge  --kubeconfig ${CLUSTER_KUBECONFIG}
+oc patch argocd/openshift-gitops -n openshift-gitops -p '{"spec": {"server": {"route": {"enabled": true, "tls": {"termination": "reencrypt"}}}}}' --type=merge  --kubeconfig ${CLUSTER_KUBECONFIG}
 
 # Allow any authenticated users to be admin on the Argo CD instance
 # - Once we have a proper access policy in place, this should be updated to be consistent with that policy.
-kubectl patch argocd/openshift-gitops -n openshift-gitops -p '{"spec":{"rbac":{"policy":"g, system:authenticated, role:admin"}}}' --type=merge --kubeconfig ${CLUSTER_KUBECONFIG}
+oc patch argocd/openshift-gitops -n openshift-gitops -p '{"spec":{"rbac":{"policy":"g, system:authenticated, role:admin"}}}' --type=merge --kubeconfig ${CLUSTER_KUBECONFIG}
 
 # Mark Pending PVC as Healthy, workaround for WaitForFirstConsumer StorageClasses.
 # If the attachment will fail then it will be visible on the pod anyway.
-kubectl patch argocd/openshift-gitops -n openshift-gitops -p '
+oc patch argocd/openshift-gitops -n openshift-gitops -p '
 spec:
   resourceCustomizations: |
     PersistentVolumeClaim:
@@ -95,8 +95,8 @@ spec:
         return hs
 ' --type=merge --kubeconfig ${CLUSTER_KUBECONFIG}
 
-# Exclude clusterworkspaces.tenancy.kcp.dev API as ArgoCD doesn't have permissions to list all ClusterWorkspace CRs.
-kubectl patch argocd/openshift-gitops -n openshift-gitops -p '
+# Exclude tenancy.kcp.dev API as ArgoCD won't probably have enough permissions for all kinds in the group (and we doesn't need to sync it anyway).
+oc patch argocd/openshift-gitops -n openshift-gitops -p '
 spec:
   resourceExclusions: |
     - apiGroups:
@@ -116,9 +116,9 @@ spec:
 
 echo
 echo "Add Role/RoleBindings for OpenShift GitOps:"
-kubectl apply --kustomize $ROOT/openshift-gitops/cluster-rbac --kubeconfig ${CLUSTER_KUBECONFIG}
+oc apply --kustomize $ROOT/openshift-gitops/cluster-rbac --kubeconfig ${CLUSTER_KUBECONFIG}
 
-ARGO_CD_ROUTE=$(kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} \
+ARGO_CD_ROUTE=$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} \
                  -n openshift-gitops \
                  -o template \
                  --template={{.spec.host}} \
@@ -152,7 +152,7 @@ configure_kcp() {
   else
     if [[ ${2} == "true" ]]
     then
-      kubectl config use ${1} --kubeconfig ${KCP_KUBECONFIG}
+      oc config use ${1} --kubeconfig ${KCP_KUBECONFIG}
     fi
     ${ROOT}/hack/configure-kcp.sh -kn ${1}
   fi
@@ -164,7 +164,7 @@ case $MODE in
     ""|"upstream")
         configure_kcp kcp-unstable "true"
         configure_kcp kcp-stable "true"
-        kubectl apply -f $ROOT/argo-cd-apps/app-of-apps/all-applications.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
+        oc apply -f $ROOT/argo-cd-apps/app-of-apps/all-applications.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
         ;;
     "preview")
         configure_kcp dev "false"

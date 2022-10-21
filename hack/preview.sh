@@ -33,7 +33,7 @@ else
     IDENTITY_HASHES="pipeline-service:$IDENTITY_HASH"
   elif [ "$PIPELINE_SERVICE_LOCAL_DEPLOY" == "true" ]; then
     KUBECONFIG=${CLUSTER_KUBECONFIG} ./hack/install-pipeline-service.sh
-    KUBECONFIG=${KCP_KUBECONFIG} kubectl ws $PIPELINE_SERVICE_WORKSPACE
+    KUBECONFIG=${KCP_KUBECONFIG} oc ws $PIPELINE_SERVICE_WORKSPACE
     IDENTITY_HASH=$(oc get apiexport kubernetes --kubeconfig ${KCP_KUBECONFIG} -o jsonpath='{.status.identityHash}')
     IDENTITY_HASHES="pipeline-service:$IDENTITY_HASH"
   else
@@ -69,7 +69,7 @@ if ! oc get namespace spi-system --kubeconfig ${KCP_KUBECONFIG} &>/dev/null; the
   oc create namespace spi-system --kubeconfig ${KCP_KUBECONFIG}
   timeout 2m bash -x -c -- 'while ! oc create route edge -n spi-system --service spi-oauth-service --port 8000 spi-oauth --kubeconfig ${KCP_KUBECONFIG}; do sleep 1; done'
 fi
-export SPI_BASE_URL=https://$(kubectl --kubeconfig ${KCP_KUBECONFIG} get route/spi-oauth -n spi-system -o jsonpath='{.status.ingress[0].host}')
+export SPI_BASE_URL=https://$(oc --kubeconfig ${KCP_KUBECONFIG} get route/spi-oauth -n spi-system -o jsonpath='{.status.ingress[0].host}')
 VAULT_HOST="https://vault-spi-vault.apps.${CLUSTER_URL_HOST}"
 $ROOT/hack/util-patch-spi-config.sh $VAULT_HOST $SPI_BASE_URL "true"
 # configure the secrets and providers in SPI
@@ -154,7 +154,7 @@ while [ "$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io al
   sleep 5
 done
 
-APPS=$(kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} apps -n openshift-gitops -o name)
+APPS=$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} apps -n openshift-gitops -o name)
 
 if echo $APPS | grep -q spi-vault; then
   if [ "`oc get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io spi-vault -n openshift-gitops -o jsonpath='{.status.health.status} {.status.sync.status}'`" != "Healthy Synced" ]; then
@@ -176,7 +176,7 @@ echo
 
 # trigger refresh of apps
 for APP in $APPS; do
-  kubectl patch --kubeconfig ${CLUSTER_KUBECONFIG} $APP -n openshift-gitops --type merge -p='{"metadata": {"annotations":{"argocd.argoproj.io/refresh": "hard"}}}'
+  oc patch --kubeconfig ${CLUSTER_KUBECONFIG} $APP -n openshift-gitops --type merge -p='{"metadata": {"annotations":{"argocd.argoproj.io/refresh": "hard"}}}'
 done
 
 # wait for the refresh
@@ -188,12 +188,12 @@ done
 USER_WORKSPACE=${USER_APPSTUDIO_WORKSPACE-"appstudio"} ${ROOT}/hack/create-user-workspace.sh appstudio
 USER_WORKSPACE=${USER_HACBS_WORKSPACE-"hacbs"} ${ROOT}/hack/create-user-workspace.sh hacbs
 
-KUBECONFIG=${KCP_KUBECONFIG} kubectl ws ${ROOT_WORKSPACE}
+KUBECONFIG=${KCP_KUBECONFIG} oc ws ${ROOT_WORKSPACE}
 
 INTERVAL=10
 # Disabling check of healthy apps for now till envineronment is more stable
 while false; do
-  STATE=$(kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} apps -n openshift-gitops --no-headers)
+  STATE=$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} apps -n openshift-gitops --no-headers)
   NOT_DONE=$(echo "$STATE" | grep -v "Synced[[:blank:]]*Healthy")
   echo "$NOT_DONE"
   if [ -z "$NOT_DONE" ]; then
@@ -206,7 +206,7 @@ while false; do
          ERROR=$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} -n openshift-gitops applications.argoproj.io $app -o jsonpath='{.status.conditions}')
          if echo "$ERROR" | grep -q 'context deadline exceeded'; then
            echo Refreshing $app
-           kubectl patch --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io $app -n openshift-gitops --type merge -p='{"metadata": {"annotations":{"argocd.argoproj.io/refresh": "soft"}}}'
+           oc patch --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io $app -n openshift-gitops --type merge -p='{"metadata": {"annotations":{"argocd.argoproj.io/refresh": "soft"}}}'
            while [ -n "$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io -n openshift-gitops $app -o jsonpath='{.metadata.annotations.argocd\.argoproj\.io/refresh}')" ]; do
              sleep 5
            done

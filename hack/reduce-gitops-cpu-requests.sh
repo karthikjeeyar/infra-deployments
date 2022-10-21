@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPENSHIFT_GITOPS=$(kubectl get argocd/openshift-gitops -n openshift-gitops -o json)
+OPENSHIFT_GITOPS=$(oc get argocd/openshift-gitops -n openshift-gitops -o json)
 
 echo
 echo "Reducing CPU resource requests in argocd/openshift-gitops:"
@@ -18,4 +18,4 @@ if [[ -n ${CLUSTER_KUBECONFIG} ]]
 then
   KUBECONFIG_PARAM="--kubeconfig ${CLUSTER_KUBECONFIG}"
 fi
-kubectl patch argocd/openshift-gitops -n openshift-gitops --type='json' -p "${PATCH}]" ${KUBECONFIG_PARAM}
+oc patch argocd/openshift-gitops -n openshift-gitops --type='json' -p "${PATCH}]" ${KUBECONFIG_PARAM}

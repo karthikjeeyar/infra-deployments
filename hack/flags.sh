@@ -88,26 +88,26 @@ parse_flags() {
 
   # Convert home ROOT_WORKSPACE to full path
   if [ "$ROOT_WORKSPACE" == "~" ]; then
-    ROOT_WORKSPACE=$(KUBECONFIG=${KCP_KUBECONFIG} kubectl ws '~' --short)
+    ROOT_WORKSPACE=$(KUBECONFIG=${KCP_KUBECONFIG} oc ws '~' --short)
   fi
 
   # Check config files and version compatibility
-  if kubectl version -o yaml --kubeconfig ${CLUSTER_KUBECONFIG} | yq '.serverVersion.gitVersion' | grep -q kcp; then
+  if oc version -o yaml --kubeconfig ${CLUSTER_KUBECONFIG} | yq '.serverVersion.gitVersion' | grep -q kcp; then
     echo CLUSTER_KUBECONFIG=${CLUSTER_KUBECONFIG} points to KCP not to cluster.
     exit 1
   fi
-  KCP_SERVER_VERSION=$(kubectl version -o yaml --kubeconfig ${KCP_KUBECONFIG} 2>/dev/null | yq '.serverVersion.gitVersion')
+  KCP_SERVER_VERSION=$(oc version -o yaml --kubeconfig ${KCP_KUBECONFIG} 2>/dev/null | yq '.serverVersion.gitVersion')
   if ! echo "$KCP_SERVER_VERSION" | grep -q 'kcp\|v0.0.0-master'; then
     echo KCP_KUBECONFIG=${KCP_KUBECONFIG} does not point to KCP cluster.
     exit 1
   fi
-  KUBECTL_CLIENT_VERSION=$(kubectl version --client -o yaml)
-  if [ $(echo "$KUBECTL_CLIENT_VERSION" | yq '.clientVersion.minor') -lt 24 ]; then
-    echo 'kubectl 1.24.x or newer needs to be used'
+  oc_CLIENT_VERSION=$(oc version --client -o yaml)
+  if [ $(echo "$oc_CLIENT_VERSION" | yq '.clientVersion.minor') -lt 24 ]; then
+    echo 'oc 1.24.x or newer needs to be used'
     exit 1
   fi
   KCP_SERVER=$(echo $KCP_SERVER_VERSION | sed 's/.*kcp-v\(.*\)\..*/\1/')
-  KCP_CLIENT=$(kubectl kcp --version | sed 's/.*kcp-v\(.*\)\..*/\1/')
+  KCP_CLIENT=$(oc kcp --version | sed 's/.*kcp-v\(.*\)\..*/\1/')
   if echo "$KCP_SERVER_VERSION" | grep -q 'v0.0.0-master'; then
     export KCP_VERSION=${KCP_VERSION:-"main"}
     echo "KCP server is self compiled, cannot check kubectl kcp plugin compatibility"

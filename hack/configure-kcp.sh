@@ -26,7 +26,7 @@ function extra_help() {
 configure_compute_workspace() {
   # improve kubeconfig thing when this is addressed https://github.com/kcp-dev/kcp/issues/1689
   echo "Using the '${ROOT_WORKSPACE}' workspace as the root"
-  KUBECONFIG=${KCP_KUBECONFIG} kubectl ws ${ROOT_WORKSPACE}
+  KUBECONFIG=${KCP_KUBECONFIG} oc ws ${ROOT_WORKSPACE}
   echo
   
   if [[ ${ROOT_WORKSPACE} == "root" ]]
@@ -37,12 +37,12 @@ configure_compute_workspace() {
   fi
   
   echo "Creating and accessing '${COMPUTE_WORKSPACE}' for compute:"
-  KUBECONFIG=${KCP_KUBECONFIG} kubectl ws create ${COMPUTE_WORKSPACE} --type root:universal --ignore-existing || true
-  KUBECONFIG=${KCP_KUBECONFIG} kubectl ws ${COMPUTE_WORKSPACE}
+  KUBECONFIG=${KCP_KUBECONFIG} oc ws create ${COMPUTE_WORKSPACE} --type root:universal --ignore-existing || true
+  KUBECONFIG=${KCP_KUBECONFIG} oc ws ${COMPUTE_WORKSPACE}
   echo
   
   SYNC_TARGET=appstudio-internal
-  if [[ -z "$(kubectl get synctargets.workload.kcp.dev ${SYNC_TARGET} --kubeconfig ${KCP_KUBECONFIG} 2>/dev/null)" ]]; then
+  if [[ -z "$(oc get synctargets.workload.kcp.dev ${SYNC_TARGET} --kubeconfig ${KCP_KUBECONFIG} 2>/dev/null)" ]]; then
     echo "Creating SyncTarget..."
 
     # CAUTION: '--resource=statefulsets.apps' is temporarily added as a synchronized resource to the syncer, until the GitOps 
@@ -81,7 +81,7 @@ configure_compute_workspace() {
   fi
   
   echo "Creating ClusterRole(Binding) to make the APIExport of the compute bindable for the group '${BIND_SCOPE}':"
-  cat <<EOF | kubectl apply --kubeconfig ${KCP_KUBECONFIG} -f -
+  cat <<EOF | oc apply --kubeconfig ${KCP_KUBECONFIG} -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -112,7 +112,7 @@ EOF
   echo
   
   echo -n "Waiting for SyncTarget to be ready: "
-  while [[ -z "$(kubectl get synctargets.workload.kcp.dev ${SYNC_TARGET} -o wide --kubeconfig ${KCP_KUBECONFIG} | grep True)" ]]; do
+  while [[ -z "$(oc get synctargets.workload.kcp.dev ${SYNC_TARGET} -o wide --kubeconfig ${KCP_KUBECONFIG} | grep True)" ]]; do
     echo -n "."
     sleep 1
   done
@@ -123,15 +123,15 @@ EOF
 
 configure_service_provider_workspace() {
   echo "Creating and accessing '${SP_WORKSPACE_NAME}':"
-  KUBECONFIG=${KCP_KUBECONFIG} kubectl ws ${ROOT_WORKSPACE}
+  KUBECONFIG=${KCP_KUBECONFIG} oc ws ${ROOT_WORKSPACE}
   COMPUTE_WORKSPACE_PATH=${ROOT_WORKSPACE}:${COMPUTE_WORKSPACE}
   
-  KUBECONFIG=${KCP_KUBECONFIG} kubectl ws create ${SP_WORKSPACE_NAME} --ignore-existing --type root:universal || true
-  SP_WORKSPACE_URL=$(KUBECONFIG=${KCP_KUBECONFIG} kubectl get workspaces ${SP_WORKSPACE_NAME} -o jsonpath='{.status.URL}')
-  KUBECONFIG=${KCP_KUBECONFIG} kubectl ws ${SP_WORKSPACE_NAME}
+  KUBECONFIG=${KCP_KUBECONFIG} oc ws create ${SP_WORKSPACE_NAME} --ignore-existing --type root:universal || true
+  SP_WORKSPACE_URL=$(KUBECONFIG=${KCP_KUBECONFIG} oc get workspaces ${SP_WORKSPACE_NAME} -o jsonpath='{.status.URL}')
+  KUBECONFIG=${KCP_KUBECONFIG} oc ws ${SP_WORKSPACE_NAME}
   
   echo "Creating APIBinding '${SYNC_TARGET}' for the compute"
-  cat <<EOF | kubectl apply --kubeconfig ${KCP_KUBECONFIG} -f -
+  cat <<EOF | oc apply --kubeconfig ${KCP_KUBECONFIG} -f -
 apiVersion: apis.kcp.dev/v1alpha1
 kind: APIBinding
 metadata:
@@ -144,7 +144,7 @@ spec:
 EOF
 
   echo -n "Waiting for APIBinding '${SYNC_TARGET}' to be bound:"
-  while [[ -z "$(kubectl get apibindings.apis.kcp.dev ${SYNC_TARGET} -o jsonpath="{.status.phase}" --kubeconfig ${KCP_KUBECONFIG} | grep Bound)" ]]; do
+  while [[ -z "$(oc get apibindings.apis.kcp.dev ${SYNC_TARGET} -o jsonpath="{.status.phase}" --kubeconfig ${KCP_KUBECONFIG} | grep Bound)" ]]; do
     echo -n "."
     sleep 1
   done
@@ -152,16 +152,16 @@ EOF
   echo
   
   echo "Adding Role/RoleBindings for OpenShift GitOps in ${SP_WORKSPACE_NAME} workspace:"
-  kubectl apply --kustomize $ROOT/openshift-gitops/in-kcp --kubeconfig ${KCP_KUBECONFIG}
+  oc apply --kustomize $ROOT/openshift-gitops/in-kcp --kubeconfig ${KCP_KUBECONFIG}
   echo
   
-  echo "Getting a token for argocd SA (in ${SP_WORKSPACE_NAME} workspace) - kubectl 1.24.x or newer needs to be used."
-  SA_TOKEN=$(kubectl create token argocd --duration 876000h -n controllers-argocd-manager --kubeconfig ${KCP_KUBECONFIG})
+  echo "Getting a token for argocd SA (in ${SP_WORKSPACE_NAME} workspace) - oc 1.24.x or newer needs to be used."
+  SA_TOKEN=$(oc create token argocd --duration 876000h -n controllers-argocd-manager --kubeconfig ${KCP_KUBECONFIG})
   echo
 
   SECRET_NAME=${CLUSTER_SECRET_NAME_PREFIX}-workspace-${KCP_INSTANCE_NAME}
   echo "Creating ArgoCD secret with the name '${SECRET_NAME}' representing '${SP_WORKSPACE_NAME}' workspace with URL '${SP_WORKSPACE_URL}' in the compute OpenShift cluster for ${KCP_INSTANCE_NAME}:"
-  cat <<EOF | kubectl apply --kubeconfig ${CLUSTER_KUBECONFIG} -f -
+  cat <<EOF | oc apply --kubeconfig ${CLUSTER_KUBECONFIG} -f -
 apiVersion: v1
 kind: Secret
 metadata:
@@ -200,11 +200,11 @@ configure_service_provider_workspace
 
 echo
 echo "Triggering hard refresh of all Applications:"
-for APP in $(kubectl get apps -n openshift-gitops -o name --kubeconfig ${CLUSTER_KUBECONFIG}); do
-  kubectl patch ${APP} -n openshift-gitops --type merge -p='{"metadata": {"annotations":{"argocd.argoproj.io/refresh": "hard"}}}' --kubeconfig ${CLUSTER_KUBECONFIG}
+for APP in $(oc get apps -n openshift-gitops -o name --kubeconfig ${CLUSTER_KUBECONFIG}); do
+  oc patch ${APP} -n openshift-gitops --type merge -p='{"metadata": {"annotations":{"argocd.argoproj.io/refresh": "hard"}}}' --kubeconfig ${CLUSTER_KUBECONFIG}
 done
 
 echo "Triggering replace sync of all Applications:"
-for APP in $(kubectl get apps -n openshift-gitops -o name --kubeconfig ${CLUSTER_KUBECONFIG}); do
-  kubectl patch ${APP} -n openshift-gitops --type merge -p='{"operation": {"sync":{"syncOptions": ["Replace=true"]}}}' --kubeconfig ${CLUSTER_KUBECONFIG}
+for APP in $(oc get apps -n openshift-gitops -o name --kubeconfig ${CLUSTER_KUBECONFIG}); do
+  oc patch ${APP} -n openshift-gitops --type merge -p='{"operation": {"sync":{"syncOptions": ["Replace=true"]}}}' --kubeconfig ${CLUSTER_KUBECONFIG}
 done
