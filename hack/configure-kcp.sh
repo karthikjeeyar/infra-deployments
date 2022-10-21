@@ -41,7 +41,7 @@ configure_compute_workspace() {
   KUBECONFIG=${KCP_KUBECONFIG} oc ws ${COMPUTE_WORKSPACE}
   echo
   
-  SYNC_TARGET=appstudio-internal
+  SYNC_TARGET=crc-cluster-test
   if [[ -z "$(oc get synctargets.workload.kcp.dev ${SYNC_TARGET} --kubeconfig ${KCP_KUBECONFIG} 2>/dev/null)" ]]; then
     echo "Creating SyncTarget..."
     KUBECONFIG=${KCP_KUBECONFIG} oc kcp workload sync ${SYNC_TARGET} --syncer-image ghcr.io/kcp-dev/kcp/syncer:0.9.1  -o /tmp/${SYNC_TARGET}-syncer.yaml
