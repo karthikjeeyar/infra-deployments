@@ -34,7 +34,7 @@ parse_flags $@
 
 delete_workspace() {
   echo "Deleting '${1}' workspace:"
-  KUBECONFIG=${KCP_KUBECONFIG} kubectl delete workspace ${1}
+  KUBECONFIG=${KCP_KUBECONFIG} oc delete workspace ${1}
   echo
 }
 
@@ -45,11 +45,11 @@ clean_kcp() {
   else
     if [[ ${2} == "true" ]]
     then
-      kubectl config use ${1}
+      oc config use ${1}
     fi
     echo
     echo "Using the '${ROOT_WORKSPACE}' workspace as the root"
-    KUBECONFIG=${KCP_KUBECONFIG} kubectl ws ${ROOT_WORKSPACE}
+    KUBECONFIG=${KCP_KUBECONFIG} oc ws ${ROOT_WORKSPACE}
     echo
 
     if [[ ${ROOT_WORKSPACE} == "root" ]]
@@ -79,7 +79,7 @@ case $MODE in
 esac
 
 
-ARGO_CD_ROUTE=$(kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} \
+ARGO_CD_ROUTE=$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} \
                  -n openshift-gitops \
                  -o template \
                  --template={{.spec.host}} \
@@ -91,20 +91,20 @@ echo
 echo "Removing applications, you can see progress ${ARGO_CD_ROUTE}"
 echo "If there is running Sync then cancel it manually"
 echo "Remove Argo CD Applications:"
-kubectl delete -f ${ROOT}/argo-cd-apps/app-of-apps/all-applications.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
-kubectl wait --for=delete -f ${ROOT}/argo-cd-apps/app-of-apps/all-applications.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
+oc delete -f ${ROOT}/argo-cd-apps/app-of-apps/all-applications.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
+oc wait --for=delete -f ${ROOT}/argo-cd-apps/app-of-apps/all-applications.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
 
 echo
 echo "Remove RBAC for OpenShift GitOps:"
-kubectl delete -k ${ROOT}/openshift-gitops/cluster-rbac --kubeconfig ${CLUSTER_KUBECONFIG}
+oc delete -k ${ROOT}/openshift-gitops/cluster-rbac --kubeconfig ${CLUSTER_KUBECONFIG}
 
 echo
 echo "Remove the OpenShift GitOps instance:"
-kubectl delete gitopsservice cluster -n openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
+oc delete gitopsservice cluster -n openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
 
 echo 
 echo "Remove the OpenShift GitOps operator subscription:"
-kubectl delete -f ${ROOT}/openshift-gitops/subscription-openshift-gitops.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
+oc delete -f ${ROOT}/openshift-gitops/subscription-openshift-gitops.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
 
 echo 
 echo "Removing operators and operands:"

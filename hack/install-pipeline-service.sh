@@ -21,7 +21,7 @@ $PIPELINE_SERVICE_DIR/images/kcp-registrar/register.sh --kcp-org $ROOT_WORKSPACE
 
 rm -rf "$PIPELINE_SERVICE_DIR"
 
-KUBECONFIG=${KCP_KUBECONFIG} kubectl ws $ROOT_WORKSPACE
+KUBECONFIG=${KCP_KUBECONFIG} oc ws $ROOT_WORKSPACE
 
 cat << EOF > /tmp/pipeline-service-binding.yaml
 apiVersion: apis.kcp.dev/v1alpha1

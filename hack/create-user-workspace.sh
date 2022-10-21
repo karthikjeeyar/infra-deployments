@@ -25,11 +25,11 @@ then
 fi
 
 if [ "${ROOT_WORKSPACE}" == "~" ]; then
-  ROOT_WORKSPACE=$(kubectl ws '~' --short)
+  ROOT_WORKSPACE=$(oc ws '~' --short)
 fi
 
 echo "Accessing the home workspace:"
-kubectl ws $HOME_WORKSPACE
+oc ws $HOME_WORKSPACE
 
 APPSTUDIO_SP_WORKSPACE=${APPSTUDIO_SP_WORKSPACE:-${ROOT_WORKSPACE}:${APPSTUDIO_WORKSPACE}}
 HACBS_SP_WORKSPACE=${HACBS_SP_WORKSPACE:-${ROOT_WORKSPACE}:${HACBS_WORKSPACE}}
@@ -37,24 +37,24 @@ PIPELINE_SERVICE_SP_WORKSPACE=${PIPELINE_SERVICE_SP_WORKSPACE:-${ROOT_WORKSPACE}
 
 USER_APPSTUDIO_WORKSPACE=${USER_APPSTUDIO_WORKSPACE:-"${SERVICE_NAME}"}
 echo "Creating & accessing AppStudio workspace '${USER_APPSTUDIO_WORKSPACE}':"
-kubectl ws create ${USER_APPSTUDIO_WORKSPACE}  --ignore-existing --type root:universal --enter
+oc ws create ${USER_APPSTUDIO_WORKSPACE}  --ignore-existing --type root:universal --enter
 
-kubectl kustomize ${ROOT}/apibindings/${SERVICE_NAME}/ | sed "s|\${APPSTUDIO_SP_WORKSPACE}|${APPSTUDIO_SP_WORKSPACE}|g;s|\${HACBS_SP_WORKSPACE}|${HACBS_SP_WORKSPACE}|g;s|\${PIPELINE_SERVICE_SP_WORKSPACE}|${PIPELINE_SERVICE_SP_WORKSPACE}|g" | \
-  kubectl apply -f -
+oc kustomize ${ROOT}/apibindings/${SERVICE_NAME}/ | sed "s|\${APPSTUDIO_SP_WORKSPACE}|${APPSTUDIO_SP_WORKSPACE}|g;s|\${HACBS_SP_WORKSPACE}|${HACBS_SP_WORKSPACE}|g;s|\${PIPELINE_SERVICE_SP_WORKSPACE}|${PIPELINE_SERVICE_SP_WORKSPACE}|g" | \
+  oc apply -f -
 
 echo
 echo "Patching APIBindings to accept all permission claims:"
-API_BINDINGS=$(kubectl get apibindings.apis.kcp.dev -l provided-by=infra-deployments -o name)
+API_BINDINGS=$(oc get apibindings.apis.kcp.dev -l provided-by=infra-deployments -o name)
 for API_BINDING in ${API_BINDINGS}
 do
-  EXPORT_PERMISSION_CLAIMS=$(kubectl get ${API_BINDING} -o jsonpath='{.status.exportPermissionClaims}')
+  EXPORT_PERMISSION_CLAIMS=$(oc get ${API_BINDING} -o jsonpath='{.status.exportPermissionClaims}')
   ACCEPTED_CLAIMS=
   for EXPORT_CLAIM in $(echo "${EXPORT_PERMISSION_CLAIMS}" | jq -c '.[]')
   do
     ACCEPTED_CLAIMS=${ACCEPTED_CLAIMS}$(echo "${EXPORT_CLAIM}" | jq '. += {"state": "Accepted"}' | jq -c)","
   done
-  kubectl patch ${API_BINDING} --type='json' -p="[{'op': 'replace', 'path': '/spec/permissionClaims', 'value': [${ACCEPTED_CLAIMS}]}]"
+  oc patch ${API_BINDING} --type='json' -p="[{'op': 'replace', 'path': '/spec/permissionClaims', 'value': [${ACCEPTED_CLAIMS}]}]"
 done
 
 echo
-echo "The ${SERVICE_NAME} user workspace is created: $(kubectl ws . --short)"
+echo "The ${SERVICE_NAME} user workspace is created: $(oc ws . --short)"

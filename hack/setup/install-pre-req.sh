@@ -1,6 +1,6 @@
 #!/bin/bash
 #This script sets up the pre-requisites for setting up app-studio in local machine.
-# mainly setting up pip3,yq, kubectl, kustomize
+# mainly setting up pip3,yq, oc, kustomize
 # Firstly it checks which type of system is running this
 # Then it installs the dependencies one by one
 
