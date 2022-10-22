@@ -41,7 +41,7 @@ configure_compute_workspace() {
   KUBECONFIG=${KCP_KUBECONFIG} oc ws ${COMPUTE_WORKSPACE}
   echo
   
-  SYNC_TARGET=crc-cluster-test
+  SYNC_TARGET=appstudio-internal
   if [[ -z "$(oc get synctargets.workload.kcp.dev ${SYNC_TARGET} --kubeconfig ${KCP_KUBECONFIG} 2>/dev/null)" ]]; then
     echo "Creating SyncTarget..."
 
@@ -111,12 +111,12 @@ rules:
 EOF
   echo
   
-  echo -n "Waiting for SyncTarget to be ready: "
-  while [[ -z "$(oc get synctargets.workload.kcp.dev ${SYNC_TARGET} -o wide --kubeconfig ${KCP_KUBECONFIG} | grep True)" ]]; do
-    echo -n "."
-    sleep 1
-  done
-  echo " OK"
+  # echo -n "Waiting for SyncTarget to be ready: "
+  # while [[ -z "$(oc get synctargets.workload.kcp.dev ${SYNC_TARGET} -o wide --kubeconfig ${KCP_KUBECONFIG} | grep True)" ]]; do
+  #   echo -n "."
+  #   sleep 1
+  # done
+  # echo " OK"
   echo
 }
 
@@ -156,7 +156,7 @@ EOF
   echo
   
   echo "Getting a token for argocd SA (in ${SP_WORKSPACE_NAME} workspace) - oc 1.24.x or newer needs to be used."
-  SA_TOKEN=$(oc create token argocd --duration 876000h -n controllers-argocd-manager --kubeconfig ${KCP_KUBECONFIG})
+  SA_TOKEN=$(kubectl create token argocd --duration 876000h -n controllers-argocd-manager --kubeconfig ${KCP_KUBECONFIG})
   echo
 
   SECRET_NAME=${CLUSTER_SECRET_NAME_PREFIX}-workspace-${KCP_INSTANCE_NAME}
