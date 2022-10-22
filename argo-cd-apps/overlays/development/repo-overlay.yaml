@@ -5,15 +5,15 @@ metadata:
   name: authorization-in-kcp
 spec:
   generators:
-  - matrix:
-      generators:
-      - list:
-          elements:
-          - kcp-name: dev
-      - list:
-          elements:
-          - service: appstudio
-          - service: hacbs
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - kcp-name: kcp-stable
+          - list:
+              elements:
+                - service: appstudio
+                - service: hacbs
   template:
     spec:
       source:
@@ -28,7 +28,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: dev
+          - kcp-name: kcp-stable
   template:
     spec:
       source:
@@ -43,7 +43,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: dev
+          - kcp-name: kcp-stable
   template:
     spec:
       source:
@@ -67,7 +67,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: dev
+          - kcp-name: kcp-stable
   template:
     spec:
       source:
@@ -83,7 +83,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: dev
+          - kcp-name: kcp-stable
   template:
     spec:
       source:
@@ -98,7 +98,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: dev
+          - kcp-name: kcp-stable
   template:
     spec:
       source:
@@ -113,7 +113,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: dev
+          - kcp-name: kcp-stable
   template:
     spec:
       source:
