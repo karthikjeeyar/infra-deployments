@@ -1,11 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- ../../base/
-- apiexport.yaml
-
+  - ../../base/
+  - apiexport.yaml
 configMapGenerator:
-- literals:
-  - GITHUB_ORG=""
-  name: github-config
-  behavior: replace
+  - literals:
+      - GITHUB_ORG=HACbs-ui-org
+    name: github-config
+    behavior: replace
