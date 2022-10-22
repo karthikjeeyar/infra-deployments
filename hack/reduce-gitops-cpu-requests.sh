@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPENSHIFT_GITOPS=$(oc get argocd/openshift-gitops -n openshift-gitops -o json)
+OPENSHIFT_GITOPS=$(oc get argocd/openshift-gitops -n openshift-gitops -o json --kubeconfig ${CLUSTER_KUBECONFIG})
 
 echo
 echo "Reducing CPU resource requests in argocd/openshift-gitops:"
