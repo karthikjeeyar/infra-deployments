@@ -14,6 +14,10 @@ export TEKTON_RESULTS_DATABASE_USER=${TEKTON_RESULTS_DATABASE_USER:-"tekton-resu
 
 KUBECONFIG=$KCP_KUBECONFIG $PIPELINE_SERVICE_DIR/images/access-setup/content/bin/setup_kcp.sh --kcp-workspace $PIPELINE_SERVICE_WORKSPACE --kcp-org $ROOT_WORKSPACE
 
+
+
+cp ~/Documents/infra/setup_compute.sh $PIPELINE_SERVICE_DIR/images/access-setup/content/bin/
+
 KUBECONFIG=$CLUSTER_KUBECONFIG $PIPELINE_SERVICE_DIR/images/access-setup/content/bin/setup_compute.sh
 
 $PIPELINE_SERVICE_DIR/images/cluster-setup/bin/install.sh
