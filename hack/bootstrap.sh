@@ -162,8 +162,8 @@ echo
 echo "Using mode: ${MODE:-Upstream}"
 case $MODE in
     ""|"upstream")
-        configure_kcp kcp-unstable "true"
-        configure_kcp kcp-stable "true"
+        configure_kcp kcp-unstable-root "true"
+        configure_kcp kcp-stable-root "true"
         oc apply -f $ROOT/argo-cd-apps/app-of-apps/all-applications.yaml --kubeconfig ${CLUSTER_KUBECONFIG}
         ;;
     "preview")
