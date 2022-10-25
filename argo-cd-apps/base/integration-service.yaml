@@ -6,11 +6,11 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: kcp-stable
+          - kcp-name: kcp-stable-root
           - kcp-name: kcp-unstable
   template:
     metadata:
-      name: '{{kcp-name}}-integration-service'
+      name: "{{kcp-name}}-integration-service"
     spec:
       project: default
 
@@ -24,7 +24,6 @@ spec:
         name: redhat-hacbs-workspace-{{kcp-name}}
 
       syncPolicy:
-
         # Comment this out if you want to manually trigger deployments (using the
         # Argo CD Web UI or Argo CD CLI), rather than automatically deploying on
         # every new Git commit to your directory.

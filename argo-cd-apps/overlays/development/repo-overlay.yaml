@@ -9,7 +9,7 @@ spec:
         generators:
           - list:
               elements:
-                - kcp-name: kcp-stable
+                - kcp-name: kcp-stable-root
           - list:
               elements:
                 - service: appstudio
@@ -28,7 +28,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: kcp-stable
+          - kcp-name: kcp-stable-root
   template:
     spec:
       source:
@@ -43,7 +43,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: kcp-stable
+          - kcp-name: kcp-stable-root
   template:
     spec:
       source:
@@ -67,7 +67,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: kcp-stable
+          - kcp-name: kcp-stable-root
   template:
     spec:
       source:
@@ -83,7 +83,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: kcp-stable
+          - kcp-name: kcp-stable-root
   template:
     spec:
       source:
@@ -98,7 +98,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: kcp-stable
+          - kcp-name: kcp-stable-root
   template:
     spec:
       source:
@@ -113,7 +113,7 @@ spec:
   generators:
     - list:
         elements:
-          - kcp-name: kcp-stable
+          - kcp-name: kcp-stable-root
   template:
     spec:
       source:
@@ -201,17 +201,17 @@ metadata:
   name: clusterworkspacetypes
 spec:
   generators:
-  - matrix:
-      generators:
-      - list:
-          elements:
-          - kcp-name: dev
-      - list:
-          elements:
-          - sub-directory-path: clusterworkspacetypes
-            service: appstudio
-          - sub-directory-path: hacbs/clusterworkspacetypes
-            service: hacbs
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - kcp-name: dev
+          - list:
+              elements:
+                - sub-directory-path: clusterworkspacetypes
+                  service: appstudio
+                - sub-directory-path: hacbs/clusterworkspacetypes
+                  service: hacbs
   template:
     spec:
       source:

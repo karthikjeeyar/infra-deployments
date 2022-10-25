@@ -4,19 +4,19 @@ metadata:
   name: authorization-in-kcp
 spec:
   generators:
-  - matrix:
-      generators:
-        - list:
-            elements:
-            - kcp-name: kcp-stable
-            - kcp-name: kcp-unstable
-        - list:
-            elements:
-            - service: appstudio
-            - service: hacbs
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - kcp-name: kcp-stable-root
+                - kcp-name: kcp-unstable
+          - list:
+              elements:
+                - service: appstudio
+                - service: hacbs
   template:
     metadata:
-      name: '{{kcp-name}}-authorization-{{service}}'
+      name: "{{kcp-name}}-authorization-{{service}}"
     spec:
       project: default
       source:
@@ -29,7 +29,6 @@ spec:
         name: redhat-{{service}}-workspace-{{kcp-name}}
 
       syncPolicy:
-
         # Comment this out if you want to manually trigger deployments (using the
         # Argo CD Web UI or Argo CD CLI), rather than automatically deploying on
         # every new Git commit to your directory.
@@ -38,8 +37,8 @@ spec:
           selfHeal: true
 
         syncOptions:
-        - CreateNamespace=true
-        - PrunePropagationPolicy=background
+          - CreateNamespace=true
+          - PrunePropagationPolicy=background
 
         retry:
           limit: 50 # number of failed sync attempt retries; unlimited number of attempts if less than 0
