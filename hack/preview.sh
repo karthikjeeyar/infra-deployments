@@ -71,7 +71,7 @@ if ! oc get namespace spi-system --kubeconfig ${KCP_KUBECONFIG} &>/dev/null; the
 fi
 export SPI_BASE_URL=https://$(oc --kubeconfig ${KCP_KUBECONFIG} get route/spi-oauth -n spi-system -o jsonpath='{.status.ingress[0].host}')
 VAULT_HOST="https://vault-spi-vault.apps.${CLUSTER_URL_HOST}"
-$ROOT/hack/util-patch-spi-config.sh $VAULT_HOST $SPI_BASE_URL "true"
+# $ROOT/hack/util-patch-spi-config.sh $VAULT_HOST $SPI_BASE_URL "true"
 # configure the secrets and providers in SPI
 TMP_FILE=$(mktemp)
 yq e ".serviceProviders[0].type=\"${SPI_TYPE:-GitHub}\"" $ROOT/components/spi/base/config.yaml | \
