@@ -71,7 +71,7 @@ if ! oc get namespace spi-system --kubeconfig ${KCP_KUBECONFIG} &>/dev/null; the
 fi
 export SPI_BASE_URL=https://$(oc --kubeconfig ${KCP_KUBECONFIG} get route/spi-oauth -n spi-system -o jsonpath='{.status.ingress[0].host}')
 VAULT_HOST="https://vault-spi-vault.apps.${CLUSTER_URL_HOST}"
-$ROOT/hack/util-patch-spi-config.sh $VAULT_HOST $SPI_BASE_URL "true"
+# $ROOT/hack/util-patch-spi-config.sh $VAULT_HOST $SPI_BASE_URL "true"
 # configure the secrets and providers in SPI
 TMP_FILE=$(mktemp)
 yq e ".serviceProviders[0].type=\"${SPI_TYPE:-GitHub}\"" $ROOT/components/spi/base/config.yaml | \
@@ -81,7 +81,9 @@ yq e ".serviceProviders[0].type=\"${SPI_TYPE:-GitHub}\"" $ROOT/components/spi/ba
     yq e ".serviceProviders[1].clientId=\"${SPI_CLIENT_ID:-app-client-id}\"" - | \
     yq e ".serviceProviders[1].clientSecret=\"${SPI_CLIENT_SECRET:-app-secret}\"" - > $TMP_FILE
 
-oc --kubeconfig ${KCP_KUBECONFIG} create -n spi-system secret generic shared-configuration-file --from-file=config.yaml=$TMP_FILE --dry-run=client -o yaml | oc --kubeconfig ${KCP_KUBECONFIG} apply -f -
+# oc create -n spi-system secret generic spi-shared-configuration-file --kubeconfig ${KCP_KUBECONFIG} --from-file=./components/spi/config.yaml -o yaml | oc apply -f -
+oc delte secret -n spi-system generic shared-configuration-file --kubeconfig ${KCP_KUBECONFIG} 
+oc --kubeconfig ${KCP_KUBECONFIG} create -n spi-system secret generic shared-configuration-file --from-file=config.yaml=$TMP_FILE   -o yaml | oc --kubeconfig ${KCP_KUBECONFIG} apply -f -
 rm $TMP_FILE
 echo "SPI configured"
 
@@ -148,7 +150,7 @@ fi
 git checkout $MY_GIT_BRANCH
 
 #set the local cluster to point to the current git repo and branch and update the path to development
-$ROOT/hack/util-update-app-of-apps.sh $MY_GIT_REPO_URL development $PREVIEW_BRANCH
+# $ROOT/hack/util-update-app-of-apps.sh $MY_GIT_REPO_URL development $PREVIEW_BRANCH
 
 while [ "$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io all-components -n openshift-gitops -o jsonpath='{.status.health.status} {.status.sync.status}')" != "Healthy Synced" ]; do
   sleep 5
