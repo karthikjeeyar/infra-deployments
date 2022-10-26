@@ -64,7 +64,7 @@ if [ -n "$MY_GITHUB_ORG" ]; then
 fi
 
 echo "start spi config"
-CLUSTER_URL_HOST=$(kubectl whoami --kubeconfig ${CLUSTER_KUBECONFIG} --show-console | sed 's|https://console-openshift-console.apps.||')
+CLUSTER_URL_HOST=$(oc whoami --kubeconfig ${CLUSTER_KUBECONFIG} --show-console | sed 's|https://console-openshift-console.apps.||')
 if ! kubectl get namespace spi-system --kubeconfig ${KCP_KUBECONFIG} &>/dev/null; then
   kubectl create namespace spi-system --kubeconfig ${KCP_KUBECONFIG}
   timeout 2m bash -x -c -- 'while ! oc create route edge -n spi-system --service spi-oauth-service --port 8000 spi-oauth --kubeconfig ${KCP_KUBECONFIG}; do sleep 1; done'
