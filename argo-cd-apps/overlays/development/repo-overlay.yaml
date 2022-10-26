@@ -18,7 +18,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -33,7 +33,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -48,7 +48,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -57,7 +57,7 @@ metadata:
 spec:
   source:
     repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-    targetRevision: preview-kcp-hacbs
+    targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -72,7 +72,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -87,7 +87,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -102,7 +102,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -117,7 +117,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -132,7 +132,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -147,7 +147,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -162,7 +162,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -177,7 +177,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -192,7 +192,7 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -215,4 +215,4 @@ spec:
     spec:
       source:
         repoURL: https://github.com/karthikjeeyar/infra-deployments.git
-        targetRevision: preview-kcp-hacbs
+        targetRevision: preview-preview-kcp-hacbs
