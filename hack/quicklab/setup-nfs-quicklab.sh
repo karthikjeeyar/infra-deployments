@@ -25,15 +25,15 @@ chmod 600 $QUICKLABKEY
 scp -o StrictHostKeyChecking=no -i $QUICKLABKEY quicklab@$REMOTE:/home/quicklab/oc4/auth/kubeconfig /tmp/kubeconfig
 export KUBECONFIG=/tmp/kubeconfig
 
-if ! oc whoami > /dev/null 2>&1;
+if ! kubectl whoami > /dev/null 2>&1;
 then
   echo "Please login to your openshift cluster: ${QOCP}";
-  if ! oc login --server=${QOCP};
+  if ! kubectl login --server=${QOCP};
     then
       exit 1;
   fi
 else
-  OCP=$(oc whoami --show-server=true)
+  OCP=$(kubectl whoami --show-server=true)
   if [ "${OCP}" != "${QOCP}" ];
   then
     echo "It seems you are logged in to the wrong OCP cluster (${OCP}). Please login to ${QOCP} and retry the script";
@@ -71,16 +71,16 @@ $SSH -C 'cp /etc/exports ./exports; echo "/opt/nfs/pv0001 *(no_root_squash,rw,sy
 $SSH -C "sudo systemctl restart rpcbind && sudo systemctl restart nfs"
 
 set +e
-oc create namespace $NAMESPACE
-oc label namespace $NAMESPACE "openshift.io/cluster-monitoring=true" --overwrite=true
-oc project $NAMESPACE
+kubectl create namespace $NAMESPACE
+kubectl label namespace $NAMESPACE "openshift.io/cluster-monitoring=true" --overwrite=true
+kubectl project $NAMESPACE
 
-oc apply -f $ROOT/hack/quicklab/templates/rbac.yaml
-oc adm policy add-scc-to-user hostmount-anyuid system:serviceaccount:$NAMESPACE:nfs-client-provisioner
+kubectl apply -f $ROOT/hack/quicklab/templates/rbac.yaml
+kubectl adm policy add-scc-to-user hostmount-anyuid system:serviceaccount:$NAMESPACE:nfs-client-provisioner
 export REMOTE
-envsubst < $ROOT/hack/quicklab/templates/deployment.yaml | oc apply -f -
-oc -n $NAMESPACE wait --for=condition=ready pod --all
-oc apply -f $ROOT/hack/quicklab/templates/storageClass.yaml
+envsubst < $ROOT/hack/quicklab/templates/deployment.yaml | kubectl apply -f -
+kubectl -n $NAMESPACE wait --for=condition=ready pod --all
+kubectl apply -f $ROOT/hack/quicklab/templates/storageClass.yaml
 
 unset NAMESPACE
 unset QUICKLABKEY

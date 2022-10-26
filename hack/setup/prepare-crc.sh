@@ -68,8 +68,8 @@ fi
 #Start CRC with modified configs
 "$CRCBINARY" start
 
-#Point local environment clients (kubectl and oc) to the CRC cluster
-eval $("$CRCBINARY" oc-env)
+#Point local environment clients (kubectl and kubectl) to the CRC cluster
+eval $("$CRCBINARY" kubectl-env)
 kubectl config use-context crc-admin
 
 #Reduce cpu resource request for each AppStudio Application

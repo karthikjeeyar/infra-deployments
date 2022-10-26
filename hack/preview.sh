@@ -29,12 +29,12 @@ if [ -n "$PIPELINE_SERVICE_IDENTITY_HASH" ]; then
 else
   KUBECONFIG=${KCP_KUBECONFIG} kubectl ws ${ROOT_WORKSPACE}
   if KUBECONFIG=${KCP_KUBECONFIG} kubectl ws $PIPELINE_SERVICE_WORKSPACE &>/dev/null; then
-    IDENTITY_HASH=$(oc get apiexport kubernetes --kubeconfig ${KCP_KUBECONFIG} -o jsonpath='{.status.identityHash}')
+    IDENTITY_HASH=$(kubectl get apiexport kubernetes --kubeconfig ${KCP_KUBECONFIG} -o jsonpath='{.status.identityHash}')
     IDENTITY_HASHES="pipeline-service:$IDENTITY_HASH"
   elif [ "$PIPELINE_SERVICE_LOCAL_DEPLOY" == "true" ]; then
     KUBECONFIG=${CLUSTER_KUBECONFIG} ./hack/install-pipeline-service.sh
     KUBECONFIG=${KCP_KUBECONFIG} kubectl ws $PIPELINE_SERVICE_WORKSPACE
-    IDENTITY_HASH=$(oc get apiexport kubernetes --kubeconfig ${KCP_KUBECONFIG} -o jsonpath='{.status.identityHash}')
+    IDENTITY_HASH=$(kubectl get apiexport kubernetes --kubeconfig ${KCP_KUBECONFIG} -o jsonpath='{.status.identityHash}')
     IDENTITY_HASHES="pipeline-service:$IDENTITY_HASH"
   else
     echo "pipeline-service workspace is not available"
@@ -64,9 +64,9 @@ if [ -n "$MY_GITHUB_ORG" ]; then
 fi
 
 echo "start spi config"
-CLUSTER_URL_HOST=$(oc whoami --kubeconfig ${CLUSTER_KUBECONFIG} --show-console | sed 's|https://console-openshift-console.apps.||')
-if ! oc get namespace spi-system --kubeconfig ${KCP_KUBECONFIG} &>/dev/null; then
-  oc create namespace spi-system --kubeconfig ${KCP_KUBECONFIG}
+CLUSTER_URL_HOST=$(kubectl whoami --kubeconfig ${CLUSTER_KUBECONFIG} --show-console | sed 's|https://console-openshift-console.apps.||')
+if ! kubectl get namespace spi-system --kubeconfig ${KCP_KUBECONFIG} &>/dev/null; then
+  kubectl create namespace spi-system --kubeconfig ${KCP_KUBECONFIG}
   timeout 2m bash -x -c -- 'while ! oc create route edge -n spi-system --service spi-oauth-service --port 8000 spi-oauth --kubeconfig ${KCP_KUBECONFIG}; do sleep 1; done'
 fi
 export SPI_BASE_URL=https://$(kubectl --kubeconfig ${KCP_KUBECONFIG} get route/spi-oauth -n spi-system -o jsonpath='{.status.ingress[0].host}')
@@ -81,7 +81,7 @@ yq e ".serviceProviders[0].type=\"${SPI_TYPE:-GitHub}\"" $ROOT/components/spi/ba
     yq e ".serviceProviders[1].clientId=\"${SPI_CLIENT_ID:-app-client-id}\"" - | \
     yq e ".serviceProviders[1].clientSecret=\"${SPI_CLIENT_SECRET:-app-secret}\"" - > $TMP_FILE
 
-oc --kubeconfig ${KCP_KUBECONFIG} create -n spi-system secret generic shared-configuration-file --from-file=config.yaml=$TMP_FILE --dry-run=client -o yaml | oc --kubeconfig ${KCP_KUBECONFIG} apply -f -
+kubectl --kubeconfig ${KCP_KUBECONFIG} create -n spi-system secret generic shared-configuration-file --from-file=config.yaml=$TMP_FILE --dry-run=client -o yaml | kubectl --kubeconfig ${KCP_KUBECONFIG} apply -f -
 rm $TMP_FILE
 echo "SPI configured"
 
@@ -106,7 +106,7 @@ echo "GitOps Service configured"
 evaluate_apiexports() {
   APIEXPORT_FILES=$1
   # Get existing APIExports in service provider namespace
-  NEW_IDENTITY_HASHES=$(oc get apiexports.apis.kcp.dev -o jsonpath='{range .items[*]}{@.metadata.name}:{@.status.identityHash}{"\n"}{end}' --kubeconfig ${KCP_KUBECONFIG})
+  NEW_IDENTITY_HASHES=$(kubectl get apiexports.apis.kcp.dev -o jsonpath='{range .items[*]}{@.metadata.name}:{@.status.identityHash}{"\n"}{end}' --kubeconfig ${KCP_KUBECONFIG})
   IDENTITY_HASHES=$(echo -e "$IDENTITY_HASHES\n$NEW_IDENTITY_HASHES")
   for APIEXPORTFILE in $APIEXPORT_FILES; do
     # Get indentityHashes placeholders to be replaced
@@ -118,8 +118,8 @@ evaluate_apiexports() {
         for APIEXPORTFILE2 in $APIEXPORT_FILES; do
           if [ "$(yq '.metadata.name' $APIEXPORTFILE2)" == "$REQUEST" ]; then
             # Create APIExport placeholder and get IdentityHash, APIExport will be updated by ArgoCD later
-            oc apply -f $APIEXPORTFILE2 --kubeconfig ${KCP_KUBECONFIG}
-            IDENTITY_HASH=$(oc get -f $APIEXPORTFILE2 --kubeconfig ${KCP_KUBECONFIG} -o jsonpath='{.status.identityHash}')
+            kubectl apply -f $APIEXPORTFILE2 --kubeconfig ${KCP_KUBECONFIG}
+            IDENTITY_HASH=$(kubectl get -f $APIEXPORTFILE2 --kubeconfig ${KCP_KUBECONFIG} -o jsonpath='{.status.identityHash}')
             IDENTITY_HASHES=$(echo -e "$IDENTITY_HASHES\n$REQUEST:$IDENTITY_HASH")
             break
           fi
@@ -150,14 +150,14 @@ git checkout $MY_GIT_BRANCH
 #set the local cluster to point to the current git repo and branch and update the path to development
 $ROOT/hack/util-update-app-of-apps.sh $MY_GIT_REPO_URL development $PREVIEW_BRANCH
 
-while [ "$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io all-components -n openshift-gitops -o jsonpath='{.status.health.status} {.status.sync.status}')" != "Healthy Synced" ]; do
+while [ "$(kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io all-components -n openshift-gitops -o jsonpath='{.status.health.status} {.status.sync.status}')" != "Healthy Synced" ]; do
   sleep 5
 done
 
 APPS=$(kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} apps -n openshift-gitops -o name)
 
 if echo $APPS | grep -q spi-vault; then
-  if [ "`oc get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io spi-vault -n openshift-gitops -o jsonpath='{.status.health.status} {.status.sync.status}'`" != "Healthy Synced" ]; then
+  if [ "`kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io spi-vault -n openshift-gitops -o jsonpath='{.status.health.status} {.status.sync.status}'`" != "Healthy Synced" ]; then
     echo "Initializing Vault"
     export VAULT_KUBE_CONFIG=${CLUSTER_KUBECONFIG}
     export VAULT_NAMESPACE=spi-vault
@@ -180,7 +180,7 @@ for APP in $APPS; do
 done
 
 # wait for the refresh
-while [ -n "$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io -n openshift-gitops -o jsonpath='{range .items[*]}{@.metadata.annotations.argocd\.argoproj\.io/refresh}{end}')" ]; do
+while [ -n "$(kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io -n openshift-gitops -o jsonpath='{range .items[*]}{@.metadata.annotations.argocd\.argoproj\.io/refresh}{end}')" ]; do
   sleep 5
 done
 
@@ -203,11 +203,11 @@ while false; do
      UNKNOWN=$(echo "$NOT_DONE" | grep Unknown | grep -v Progressing | cut -f1 -d ' ')
      if [ -n "$UNKNOWN" ]; then
        for app in $UNKNOWN; do
-         ERROR=$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} -n openshift-gitops applications.argoproj.io $app -o jsonpath='{.status.conditions}')
+         ERROR=$(kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} -n openshift-gitops applications.argoproj.io $app -o jsonpath='{.status.conditions}')
          if echo "$ERROR" | grep -q 'context deadline exceeded'; then
            echo Refreshing $app
            kubectl patch --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io $app -n openshift-gitops --type merge -p='{"metadata": {"annotations":{"argocd.argoproj.io/refresh": "soft"}}}'
-           while [ -n "$(oc get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io -n openshift-gitops $app -o jsonpath='{.metadata.annotations.argocd\.argoproj\.io/refresh}')" ]; do
+           while [ -n "$(kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} applications.argoproj.io -n openshift-gitops $app -o jsonpath='{.metadata.annotations.argocd\.argoproj\.io/refresh}')" ]; do
              sleep 5
            done
            echo Refresh of $app done
@@ -217,7 +217,7 @@ while false; do
          if [ -n "$ERROR" ]; then
            echo "$ERROR"
          else
-           oc get --kubeconfig ${CLUSTER_KUBECONFIG} -n openshift-gitops applications.argoproj.io $app -o yaml
+           kubectl get --kubeconfig ${CLUSTER_KUBECONFIG} -n openshift-gitops applications.argoproj.io $app -o yaml
          fi
        done
        exit 1

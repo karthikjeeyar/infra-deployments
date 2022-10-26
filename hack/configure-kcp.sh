@@ -63,7 +63,7 @@ configure_compute_workspace() {
     if [[ "${CKCP_SYNCER_USE_INTERNAL_SERVICE}" == "true" ]]
     then 
       CKCP_INTERNAL_NAME=ckcp.ckcp.svc.cluster.local
-      CKCP_EXTERNAL_NAME=$(oc get route -n ckcp ckcp -o jsonpath={.spec.host} --kubeconfig ${CLUSTER_KUBECONFIG})
+      CKCP_EXTERNAL_NAME=$(kubectl get route -n ckcp ckcp -o jsonpath={.spec.host} --kubeconfig ${CLUSTER_KUBECONFIG})
       sed -i 's/certificate-authority-data: .*/insecure-skip-tls-verify: true/' ${SYNCER_MANIFEST}
       sed -i s/$CKCP_EXTERNAL_NAME:443/$CKCP_INTERNAL_NAME:6443/g ${SYNCER_MANIFEST}
       echo "CRC Mode: Patch ckcp from $CKCP_EXTERNAL_NAME:443 to $CKCP_INTERNAL_NAME:6443 "

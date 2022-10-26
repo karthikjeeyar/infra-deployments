@@ -32,9 +32,9 @@ function extra_help() {
 source ${ROOT}/hack/flags.sh "The bootstrap.sh script installs and configures ArgoCD in Openshift cluster and configures service provider workspaces." extra_params extra_help
 parse_flags $@
 
-if [ "$(oc auth can-i '*' '*' --all-namespaces --kubeconfig ${CLUSTER_KUBECONFIG})" != "yes" ]; then
+if [ "$(kubectl auth can-i '*' '*' --all-namespaces --kubeconfig ${CLUSTER_KUBECONFIG})" != "yes" ]; then
   echo
-  echo "[ERROR] User '$(oc whoami --kubeconfig ${CLUSTER_KUBECONFIG})' does not have the required 'cluster-admin' role." 1>&2
+  echo "[ERROR] User '$(kubectl whoami --kubeconfig ${CLUSTER_KUBECONFIG})' does not have the required 'cluster-admin' role." 1>&2
   echo "Log into the cluster with a user with the required privileges (e.g. kubeadmin) and retry."
   exit 1
 fi

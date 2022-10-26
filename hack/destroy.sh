@@ -108,33 +108,33 @@ kubectl delete -f ${ROOT}/openshift-gitops/subscription-openshift-gitops.yaml --
 
 echo 
 echo "Removing operators and operands:"
-oc delete clusterserviceversions.operators.coreos.com --all -n openshift-operators --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl delete clusterserviceversions.operators.coreos.com --all -n openshift-operators --kubeconfig ${CLUSTER_KUBECONFIG}
 
 echo
 echo "Wait until ArgoCD instance is gone:"
-oc wait --for=delete argocd openshift-gitops -n openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl wait --for=delete argocd openshift-gitops -n openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
 
 echo
 echo "Remove openshift-gitops namespace:"
-oc delete namespace openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
-oc wait --for=delete namespace openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl delete namespace openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl wait --for=delete namespace openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
 
 echo
 echo "Remove openshift-gitops namespace:"
-oc delete namespace openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
-oc wait --for=delete namespace openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl delete namespace openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl wait --for=delete namespace openshift-gitops --kubeconfig ${CLUSTER_KUBECONFIG}
 
 echo
 echo "Remove all generated kcp namespaces:"
-oc delete namespace -l internal.workload.kcp.dev/cluster --kubeconfig ${CLUSTER_KUBECONFIG}
-oc wait --for=delete namespace -l internal.workload.kcp.dev/cluster --kubeconfig ${CLUSTER_KUBECONFIG}
-oc delete namespace -l workload.kcp.io/sync-target --kubeconfig ${CLUSTER_KUBECONFIG}
-oc wait --for=delete namespace -l workload.kcp.io/sync-target --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl delete namespace -l internal.workload.kcp.dev/cluster --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl wait --for=delete namespace -l internal.workload.kcp.dev/cluster --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl delete namespace -l workload.kcp.io/sync-target --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl wait --for=delete namespace -l workload.kcp.io/sync-target --kubeconfig ${CLUSTER_KUBECONFIG}
 
 
 echo
 echo "Vault "
-oc delete namespace spi-vault --kubeconfig ${CLUSTER_KUBECONFIG}
-oc wait --for=delete namespace  spi-vault --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl delete namespace spi-vault --kubeconfig ${CLUSTER_KUBECONFIG}
+kubectl wait --for=delete namespace  spi-vault --kubeconfig ${CLUSTER_KUBECONFIG}
 echo 
 echo "Complete."
