@@ -1,7 +1,1 @@
-[
-  {
-    "op": "add",
-    "path": "/data/API_SERVER",
-    "value": "https://api-toolchain-host-operator.apps.kjeeyar-4.12-06oct22.devcluster.openshift.com:443"
-  }
-]
+[{"op": "add", "path": "/data/API_SERVER", "value": ""}]
