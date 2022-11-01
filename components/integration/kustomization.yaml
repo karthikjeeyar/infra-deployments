@@ -13,6 +13,5 @@ images:
     newTag: 19b81aed02cbe8bf9524f6f3856cc2b9feef8cce
 
 namespace: integration-service
-
-patches:
-  - ./manager_resources_patch.yaml
+# patches:
+#   - ./manager_resources_patch.yaml
