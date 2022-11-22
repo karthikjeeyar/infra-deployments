@@ -21,4 +21,4 @@ data:
   transparency.enabled: "true"
   #transparency.url: "https://rekor.sigstore.dev"
 
-  transparency.url: https://rekor.apps.kjeeyar-4.11-30oct22.devcluster.openshift.com
+  transparency.url: https://rekor.apps.kjeeyar-hacbs-4.11-22nov22.devcluster.openshift.com

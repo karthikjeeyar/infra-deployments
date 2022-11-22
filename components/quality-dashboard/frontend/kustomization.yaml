@@ -9,4 +9,4 @@ namespace: quality-dashboard
 configMapGenerator:
   - name: quality-dashboard-configmap
     literals:
-      - BACKEND_ROUTE=https://quality-backend-route-quality-dashboard.apps.kjeeyar-4.11-30oct22.devcluster.openshift.com
+      - BACKEND_ROUTE=https://quality-backend-route-quality-dashboard.apps.kjeeyar-hacbs-4.11-22nov22.devcluster.openshift.com

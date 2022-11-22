@@ -2,7 +2,7 @@
   {
     "op": "replace",
     "path": "/data/VAULTHOST",
-    "value": "https://spi-vault-spi-system.apps.kjeeyar-4.11-30oct22.devcluster.openshift.com"
+    "value": "https://spi-vault-spi-system.apps.kjeeyar-hacbs-4.11-22nov22.devcluster.openshift.com"
   },
   {
     "op": "add",
@@ -12,7 +12,12 @@
   {
     "op": "replace",
     "path": "/data/BASEURL",
-    "value": "https://spi-oauth-route-spi-system.apps.kjeeyar-4.11-30oct22.devcluster.openshift.com"
+    "value": "https://spi-oauth-route-spi-system.apps.kjeeyar-hacbs-4.11-22nov22.devcluster.openshift.com"
+  },
+  {
+    "op": "add",
+    "path": "/data/VAULTINSECURETLS",
+    "value": "true"
   },
   {
     "op": "add",
