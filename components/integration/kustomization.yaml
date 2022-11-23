@@ -4,6 +4,7 @@ resources:
 - https://github.com/redhat-appstudio/integration-service/config/default?ref=b3a6183baf586abb958c47d2fa09c36102a3e427
 - integration.yaml
 
+
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
