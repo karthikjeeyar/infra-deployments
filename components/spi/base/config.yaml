@@ -1,4 +1,6 @@
 serviceProviders:
   - type: GitHub
-    clientId: <github-client-id>
-    clientSecret: <github-client-secret>
+    clientId: 211512
+    clientSecret: a600305a4f032bef0cb6f8784532b886fffe03e6
+# BASEURL: https://spi-oauth-route-spi-system.apps.kjeeyar-4.11-11nov22.devcluster.openshift.com
+# VAULTHOST: https://spi-vault-spi-system.apps.kjeeyar-4.11-11nov22.devcluster.openshift.com
