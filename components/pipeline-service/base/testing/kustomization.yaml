@@ -2,4 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ns.yaml
+<<<<<<< HEAD
   - rbac.yaml
+=======
+>>>>>>> 630ce44e (Bump pipeline-service version (#1441))
