@@ -1,8 +1,7 @@
 resources:
-- allow-argocd-to-manage.yaml
-- argocd-permissions.yaml
-- https://github.com/redhat-appstudio/integration-service/config/default?ref=471556e4bf32d3cfcadf2151da19c4277dfbc904
-
+  - allow-argocd-to-manage.yaml
+  - argocd-permissions.yaml
+  - https://github.com/redhat-appstudio/integration-service/config/default?ref=10d51595d74cb5574d46792de09a36cd31203b0c
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
