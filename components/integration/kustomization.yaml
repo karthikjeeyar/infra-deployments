@@ -4,13 +4,10 @@ resources:
   - https://github.com/redhat-appstudio/integration-service/config/default?ref=10d51595d74cb5574d46792de09a36cd31203b0c
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 images:
-- name: quay.io/karthikjeeyar/integration-service
-  newName: quay.io/karthikjeeyar/integration-service
-  newTag: v0.0.1
-
+  - name: quay.io/karthikjeeyar/integration-service
+    newName: quay.io/karthikjeeyar/integration-service
+    newTag: v0.0.1
 namespace: integration-service
-
 patches:
   - ./manager_resources_patch.yaml
