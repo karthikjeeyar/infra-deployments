@@ -4,4 +4,4 @@
   value: https://github.com/karthikjeeyar/infra-deployments.git
 - op: replace
   path: /spec/template/spec/source/targetRevision
-  value: preview-preview-rhtap-ui-dev
+  value: preview-preview-preview-rhtap-ui-dev
