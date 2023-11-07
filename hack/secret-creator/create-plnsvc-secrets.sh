@@ -24,11 +24,7 @@ create_db_secret() {
     kubectl create secret generic -n tekton-results tekton-results-database \
       --from-literal=db.user=tekton \
       --from-literal=db.password="$(openssl rand -base64 20)" \
-<<<<<<< HEAD
       --from-literal=db.host="postgres-postgresql.tekton-results.svc.cluster.local" \
-=======
-      --from-literal=db.host="tekton-results-database-service.tekton-results.svc.cluster.local" \
->>>>>>> 630ce44e (Bump pipeline-service version (#1441))
       --from-literal=db.name="tekton_results"
 }
 
@@ -41,16 +37,11 @@ create_s3_secret() {
     USER=minio
     PASS="$(openssl rand -base64 20)"
     kubectl create secret generic -n tekton-results tekton-results-s3 \
-<<<<<<< HEAD
       --from-literal=aws_access_key_id="$USER" \
       --from-literal=aws_secret_access_key="$PASS" \
       --from-literal=aws_region='not-applicable' \
       --from-literal=bucket=tekton-results \
       --from-literal=endpoint='https://minio.tekton-results.svc.cluster.local'
-=======
-      --from-literal=S3_ACCESS_KEY_ID="$USER" \
-      --from-literal=S3_SECRET_ACCESS_KEY="$PASS"
->>>>>>> 630ce44e (Bump pipeline-service version (#1441))
 
     echo "Creating MinIO config" >&2
     if kubectl get secret -n tekton-results minio-storage-configuration &>/dev/null; then
